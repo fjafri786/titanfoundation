@@ -107,6 +107,57 @@
         z-index: 50;
         user-select:none;
         -webkit-user-select:none;
+        border-radius: 18px;
+      }
+      .toolbar.dragging{ cursor: grabbing; }
+      .toolbarHandle{
+        width: 28px;
+        height: 28px;
+        border-radius: 10px;
+        border:1px dashed rgba(148,163,184,0.9);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:14px;
+        cursor: grab;
+        color: rgba(100,116,139,1);
+      }
+      .toolbarHandle.locked{
+        cursor: not-allowed;
+        opacity: 0.6;
+        border-style: solid;
+      }
+      .toolbarMenu{
+        position:absolute;
+        left: 10px;
+        top: calc(100% + 10px);
+        background:#fff;
+        border:1px solid rgba(226,232,240,0.95);
+        box-shadow: var(--shadowSoft);
+        padding:8px;
+        display:grid;
+        gap:8px;
+        border-radius: 16px;
+        min-width: 240px;
+      }
+      .toolbarMenu .menuRow{
+        display:flex;
+        gap:8px;
+        flex-wrap:wrap;
+      }
+      .toolbarMenu .menuBtn{
+        border-radius: 12px;
+        border:1px solid rgba(226,232,240,0.95);
+        background:#fff;
+        padding:8px 10px;
+        font-size:11px;
+        font-weight:1200;
+        cursor:pointer;
+      }
+      .toolbarMenu .menuBtn.active{
+        background: rgba(37,99,235,0.08);
+        border-color: rgba(37,99,235,0.45);
+        color: rgba(30,64,175,1);
       }
       .toolBtn{
         display:inline-flex;
@@ -114,7 +165,7 @@
         justify-content:center;
         height:42px;
         padding:0 12px;
-        border-radius: 999px;
+        border-radius: 18px;
         border:2px solid rgba(15,23,42,0.12);
         background:#fff;
         cursor:pointer;
@@ -134,6 +185,7 @@
       .toolBtn.room{ border-color: rgba(37,99,235,0.55); }
       .toolBtn.elev{ border-color: rgba(22,163,74,0.55); }
       .toolBtn.note{ border-color: rgba(147,51,234,0.55); }
+      .toolBtn.item{ border-color: rgba(15,118,110,0.55); }
 
       .tbDivider{ width:1px; height:26px; background: rgba(148,163,184,0.45); border-radius:999px; margin:0 4px; }
 
@@ -212,10 +264,10 @@
       }
       .roomLabel{
         position:absolute;
-        top: -8px;
+        top: 50%;
         left: 50%;
-        transform: translate(-50%,-100%);
-        background: #fff;
+        transform: translate(-50%,-50%);
+        background: rgba(255,255,255,0.92);
         border:1px solid rgba(226,232,240,0.95);
         padding:6px 10px;
         font-size:11px;
@@ -225,6 +277,7 @@
         gap:8px;
         align-items:center;
         white-space:nowrap;
+        border-radius: 12px;
       }
       .roomLabel .roomName{ font-weight:1200; }
       .roomLabel .roomMeta{ color: rgba(100,116,139,1); }
@@ -276,6 +329,36 @@
         font-size:12px;
         border: 2px solid rgba(255,255,255,0.95);
         transform: translate(-50%,-50%);
+        border-radius: 12px;
+      }
+
+      .roomHandle{
+        position:absolute;
+        width: 10px;
+        height: 10px;
+        background:#fff;
+        border:2px solid rgba(37,99,235,0.9);
+        border-radius: 999px;
+      }
+      .roomHandle.br{ right:-6px; bottom:-6px; cursor: se-resize; }
+      .roomHandle.bl{ left:-6px; bottom:-6px; cursor: sw-resize; }
+      .roomHandle.tr{ right:-6px; top:-6px; cursor: ne-resize; }
+      .roomHandle.tl{ left:-6px; top:-6px; cursor: nw-resize; }
+
+      .sideToggle{
+        position: fixed;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 48px;
+        height: 48px;
+        border-radius: 18px;
+        background: #0B2A3A;
+        color: #fff;
+        border: none;
+        box-shadow: var(--shadowSoft);
+        cursor:pointer;
+        z-index: 80;
       }
 
       .fixtureRect,
@@ -346,9 +429,11 @@
         position:relative;
       }
       .panelCollapsed{
-        width: 56px;
-        min-width:56px;
-        max-width:56px;
+        width: 0;
+        min-width:0;
+        max-width:0;
+        border-left: none;
+        box-shadow:none;
       }
 
       .pHeader{
@@ -360,6 +445,24 @@
         justify-content:space-between;
         gap:10px;
       }
+      .pHeaderActions{
+        display:flex;
+        align-items:center;
+        gap:8px;
+      }
+      .headerBtn{
+        width:36px;
+        height:36px;
+        border-radius:12px;
+        border:1px solid rgba(255,255,255,0.22);
+        background: rgba(255,255,255,0.12);
+        color:#fff;
+        cursor:pointer;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      }
+      .headerBtn:hover{ background: rgba(255,255,255,0.18); }
       .pHeader .titleWrap{
         display:flex;
         flex-direction:column;
@@ -407,6 +510,7 @@
         min-width:0;
       }
       .panelCollapsed .pScroll{ display:none; }
+      .panelCollapsed .pHeader{ display:none; }
 
       .card{
         background:#fff;
@@ -495,31 +599,6 @@
         background:#fff;
         white-space:nowrap;
         color:#0B1220;
-      }
-
-      /* Square, engineering-first UI */
-      .sheet,
-      .toolbar,
-      .toolBtn,
-      .navCard,
-      .zBtn,
-      .zReadout,
-      .roomLabel,
-      .pHeader,
-      .collapseBtn,
-      .card,
-      .inp,
-      select,
-      textarea,
-      .btn,
-      .listItem,
-      .pill,
-      .noteMarker,
-      .fixtureRect,
-      .openingRect,
-      .spaceRect,
-      .panel{
-        border-radius: 0 !important;
       }
 
       details.section{
@@ -625,17 +704,29 @@
         const [viewportSize, setViewportSize] = useState({ w: window.innerWidth, h: window.innerHeight });
 
         // Tools
-        // select | draw | elev | note | pan | fixture | opening | measure
+        // select | draw | elev | observation | pan | fixture | opening | measure
         const [tool, setTool] = useState("select");
         const [drawType, setDrawType] = useState("room");
         const [draftElevation, setDraftElevation] = useState({ reading: 0.0, note: "" });
-        const [draftNote, setDraftNote] = useState("Observation");
+        const [draftObservation, setDraftObservation] = useState({ category: "Observation", text: "", caption: "", photo: "" });
         const [draftFixture, setDraftFixture] = useState({ kind: "Washer", label: "Washer", w: 40, h: 40 });
         const [draftOpening, setDraftOpening] = useState({ kind: "Door", label: "Door", w: 44, h: 14 });
         const [measureDraft, setMeasureDraft] = useState(null);
         const [showHeatmap, setShowHeatmap] = useState(true);
         const [zeroMode, setZeroMode] = useState("auto");
         const [customZero, setCustomZero] = useState(0);
+
+        const observationOptions = [
+          "Observation",
+          "Drywall separation",
+          "Mortar joint crack",
+          "Wall crack",
+          "Slab crack",
+          "Settlement/offset",
+          "Moisture staining",
+          "Leak indicator",
+          "Other"
+        ];
 
         // Sheet
         const SHEET = { w: 1100, h: 780 };
@@ -658,9 +749,9 @@
         });
 
         // Entities
-        const [rooms, setRooms] = useState([]);      // {id, cx, cy, w, h, name, kind, locked}
-        const [elevPts, setElevPts] = useState([]);  // {id, x, y, reading, note}
-        const [notes, setNotes] = useState([]);      // {id, x, y, text, photo}
+        const [rooms, setRooms] = useState([]);      // {id, cx, cy, w, h, name, kind, locked, caption, notes, photo}
+        const [elevPts, setElevPts] = useState([]);  // {id, x, y, reading, note, caption, photo, locked}
+        const [notes, setNotes] = useState([]);      // {id, x, y, category, text, caption, photo}
         const [fixtures, setFixtures] = useState([]); // {id, x, y, w, h, kind, label, locked}
         const [openings, setOpenings] = useState([]); // {id, x, y, w, h, kind, label, locked}
         const [measurements, setMeasurements] = useState([]); // {id, x1, y1, x2, y2}
@@ -670,9 +761,15 @@
         // Sidebar
         const [panelCollapsed, setPanelCollapsed] = useState(false);
         const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
+        const [panelExpanded, setPanelExpanded] = useState(false);
+
+        // Toolbar drag/lock
+        const [toolbarPos, setToolbarPos] = useState({ x: 16, y: 16 });
+        const [toolbarLocked, setToolbarLocked] = useState(false);
+        const [toolbarCollapsed, setToolbarCollapsed] = useState(false);
 
         // Drawing / dragging state
-        // drag: {mode:'pan'|'room-draw'|'move', start:{x,y}, startWorld:{x,y}, entity, origin, rectStartWorld}
+        // drag: {mode:'pan'|'room-draw'|'move'|'resize-room', start:{x,y}, startWorld:{x,y}, entity, origin, rectStartWorld}
         const [drag, setDrag] = useState(null);
 
         // Mobile detection
@@ -686,6 +783,25 @@
         useEffect(() => {
           if(tool !== "measure") setMeasureDraft(null);
         }, [tool]);
+
+        useEffect(() => {
+          if(!drag || drag.mode !== "toolbar-drag") return;
+          const onMove = (e) => {
+            const dx = e.clientX - drag.start.x;
+            const dy = e.clientY - drag.start.y;
+            setToolbarPos({
+              x: clamp(drag.origin.x + dx, 8, viewportSize.w - 280),
+              y: clamp(drag.origin.y + dy, 8, viewportSize.h - 80)
+            });
+          };
+          const onUp = () => setDrag(null);
+          window.addEventListener("pointermove", onMove);
+          window.addEventListener("pointerup", onUp);
+          return () => {
+            window.removeEventListener("pointermove", onMove);
+            window.removeEventListener("pointerup", onUp);
+          };
+        }, [drag, viewportSize.w, viewportSize.h]);
 
         // World <-> screen helpers
         const screenToWorld = (clientX, clientY) => {
@@ -710,6 +826,38 @@
         };
 
         const withinSheet = (sheetX, sheetY) => sheetX >= 0 && sheetY >= 0 && sheetX <= SHEET.w && sheetY <= SHEET.h;
+
+        const boundaryRoom = useMemo(
+          () => rooms.find(r => r.kind === "boundary") || null,
+          [rooms]
+        );
+        const boundaryRect = useMemo(() => {
+          if(!boundaryRoom) return null;
+          return {
+            left: boundaryRoom.cx - boundaryRoom.w/2,
+            right: boundaryRoom.cx + boundaryRoom.w/2,
+            top: boundaryRoom.cy - boundaryRoom.h/2,
+            bottom: boundaryRoom.cy + boundaryRoom.h/2
+          };
+        }, [boundaryRoom]);
+        const isPointInsideBoundary = (x, y) => {
+          if(!boundaryRect) return true;
+          return x >= boundaryRect.left && x <= boundaryRect.right && y >= boundaryRect.top && y <= boundaryRect.bottom;
+        };
+        const clampRoomToBoundary = (room) => {
+          if(!boundaryRect || room.kind === "boundary") return room;
+          const left = room.cx - room.w/2;
+          const right = room.cx + room.w/2;
+          const top = room.cy - room.h/2;
+          const bottom = room.cy + room.h/2;
+          let dx = 0;
+          let dy = 0;
+          if(left < boundaryRect.left) dx = boundaryRect.left - left;
+          if(right > boundaryRect.right) dx = boundaryRect.right - right;
+          if(top < boundaryRect.top) dy = boundaryRect.top - top;
+          if(bottom > boundaryRect.bottom) dy = boundaryRect.bottom - bottom;
+          return { ...room, cx: room.cx + dx, cy: room.cy + dy };
+        };
 
         // Zoom helpers
         const setScaleAnchored = (nextScale, anchorClient) => {
@@ -955,7 +1103,11 @@
           const { type, id } = selected;
           if(!type || !id) return;
           if(type === "room"){
-            setRooms(prev => prev.map(r => r.id === id ? { ...r, ...patch } : r));
+            setRooms(prev => prev.map(r => {
+              if(r.id !== id) return r;
+              const next = { ...r, ...patch };
+              return clampRoomToBoundary(next);
+            }));
           }
           if(type === "elev"){
             setElevPts(prev => prev.map(p => p.id === id ? { ...p, ...patch } : p));
@@ -1057,8 +1209,10 @@
             });
             if(hitElev){
               selectEntity("elev", hitElev.id);
-              setDrag({ mode:"move", entity:{ type:"elev", id:hitElev.id }, start:{x:e.clientX,y:e.clientY}, startWorld:world });
-              try { e.currentTarget.setPointerCapture(e.pointerId); } catch {}
+              if(!hitElev.locked){
+                setDrag({ mode:"move", entity:{ type:"elev", id:hitElev.id }, start:{x:e.clientX,y:e.clientY}, startWorld:world });
+                try { e.currentTarget.setPointerCapture(e.pointerId); } catch {}
+              }
               return;
             }
 
@@ -1118,6 +1272,9 @@
           }
 
           if(tool === "draw"){
+            if(drawType !== "boundary" && boundaryRect && !isPointInsideBoundary(sheet.x, sheet.y)){
+              return;
+            }
             // start rect draw
             const start = sheet;
             const newId = uid();
@@ -1129,9 +1286,17 @@
               h:10,
               name: nextSpaceName(drawType),
               kind: drawType,
-              locked: false
+              locked: false,
+              caption: "",
+              notes: "",
+              photo: ""
             };
-            setRooms(prev => [...prev, newRoom]);
+            setRooms(prev => {
+              if(drawType === "boundary"){
+                return [...prev.filter(r => r.kind !== "boundary"), newRoom];
+              }
+              return [...prev, newRoom];
+            });
             selectEntity("room", newId);
             setDrag({ mode:"room-draw", id:newId, rectStartWorld: world });
             try { e.currentTarget.setPointerCapture(e.pointerId); } catch {}
@@ -1141,15 +1306,26 @@
           if(tool === "elev"){
             const val = Number(draftElevation.reading);
             if(!Number.isFinite(val)) return;
+            if(boundaryRect && !isPointInsideBoundary(sheet.x, sheet.y)){
+              return;
+            }
             const id = uid();
-            setElevPts(prev => [...prev, { id, x:sheet.x, y:sheet.y, reading: val, note: draftElevation.note || "" }]);
+            setElevPts(prev => [...prev, { id, x:sheet.x, y:sheet.y, reading: val, note: draftElevation.note || "", caption: "", photo: "", locked: false }]);
             selectEntity("elev", id);
             return;
           }
 
-          if(tool === "note"){
+          if(tool === "observation"){
             const id = uid();
-            setNotes(prev => [...prev, { id, x:sheet.x, y:sheet.y, text: draftNote || "Note", photo: "" }]);
+            setNotes(prev => [...prev, {
+              id,
+              x:sheet.x,
+              y:sheet.y,
+              category: draftObservation.category || "Observation",
+              text: draftObservation.text || "Observation",
+              caption: draftObservation.caption || "",
+              photo: draftObservation.photo || ""
+            }]);
             selectEntity("note", id);
             return;
           }
@@ -1232,10 +1408,16 @@
             const startSheet = worldToSheetPx(startWorld.x, startWorld.y);
 
             const id = drag.id;
-            const left = Math.min(startSheet.x, sheet.x);
-            const right = Math.max(startSheet.x, sheet.x);
-            const top = Math.min(startSheet.y, sheet.y);
-            const bottom = Math.max(startSheet.y, sheet.y);
+            let left = Math.min(startSheet.x, sheet.x);
+            let right = Math.max(startSheet.x, sheet.x);
+            let top = Math.min(startSheet.y, sheet.y);
+            let bottom = Math.max(startSheet.y, sheet.y);
+            if(boundaryRect && drawType !== "boundary"){
+              left = clamp(left, boundaryRect.left, boundaryRect.right);
+              right = clamp(right, boundaryRect.left, boundaryRect.right);
+              top = clamp(top, boundaryRect.top, boundaryRect.bottom);
+              bottom = clamp(bottom, boundaryRect.top, boundaryRect.bottom);
+            }
 
             const cx = (left+right)/2;
             const cy = (top+bottom)/2;
@@ -1253,10 +1435,25 @@
             const { type, id } = drag.entity;
 
             if(type === "room"){
-              setRooms(prev => prev.map(r => r.id === id ? { ...r, cx: r.cx + deltaSheet.x, cy: r.cy + deltaSheet.y } : r));
+              setRooms(prev => prev.map(r => {
+                if(r.id !== id) return r;
+                const moved = { ...r, cx: r.cx + deltaSheet.x, cy: r.cy + deltaSheet.y };
+                return clampRoomToBoundary(moved);
+              }));
             }
             if(type === "elev"){
-              setElevPts(prev => prev.map(p => p.id === id ? { ...p, x: p.x + deltaSheet.x, y: p.y + deltaSheet.y } : p));
+              setElevPts(prev => prev.map(p => {
+                if(p.id !== id) return p;
+                const next = { ...p, x: p.x + deltaSheet.x, y: p.y + deltaSheet.y };
+                if(boundaryRect){
+                  return {
+                    ...next,
+                    x: clamp(next.x, boundaryRect.left, boundaryRect.right),
+                    y: clamp(next.y, boundaryRect.top, boundaryRect.bottom)
+                  };
+                }
+                return next;
+              }));
             }
             if(type === "note"){
               setNotes(prev => prev.map(n => n.id === id ? { ...n, x: n.x + deltaSheet.x, y: n.y + deltaSheet.y } : n));
@@ -1270,6 +1467,49 @@
 
             // update baseline for smooth drag
             setDrag(prev => prev ? ({ ...prev, startWorld: world }) : prev);
+            return;
+          }
+
+          if(drag.mode === "resize-room"){
+            const world = screenToWorld(e.clientX, e.clientY);
+            const sheet = worldToSheetPx(world.x, world.y);
+            const { id, handle, startSheet, startRoom } = drag;
+            let left = startRoom.cx - startRoom.w/2;
+            let right = startRoom.cx + startRoom.w/2;
+            let top = startRoom.cy - startRoom.h/2;
+            let bottom = startRoom.cy + startRoom.h/2;
+
+            const dx = sheet.x - startSheet.x;
+            const dy = sheet.y - startSheet.y;
+
+            if(handle.includes("r")) right += dx;
+            if(handle.includes("l")) left += dx;
+            if(handle.includes("b")) bottom += dy;
+            if(handle.includes("t")) top += dy;
+
+            const minSize = 24;
+            if(right - left < minSize){
+              if(handle.includes("l")) left = right - minSize;
+              else right = left + minSize;
+            }
+            if(bottom - top < minSize){
+              if(handle.includes("t")) top = bottom - minSize;
+              else bottom = top + minSize;
+            }
+
+            if(boundaryRect && startRoom.kind !== "boundary"){
+              left = clamp(left, boundaryRect.left, boundaryRect.right - minSize);
+              right = clamp(right, boundaryRect.left + minSize, boundaryRect.right);
+              top = clamp(top, boundaryRect.top, boundaryRect.bottom - minSize);
+              bottom = clamp(bottom, boundaryRect.top + minSize, boundaryRect.bottom);
+            }
+
+            const cx = (left + right) / 2;
+            const cy = (top + bottom) / 2;
+            const w = Math.max(minSize, right - left);
+            const h = Math.max(minSize, bottom - top);
+
+            setRooms(prev => prev.map(r => r.id === id ? { ...r, cx, cy, w, h } : r));
             return;
           }
         };
@@ -1320,20 +1560,67 @@
 
         // Derived room dimensions (approx) using scaleFtPerMajor; major grid is 50px
         const pxPerMajor = 50;
+        const formatFeetInches = (feetValue) => {
+          const sign = feetValue < 0 ? "-" : "";
+          const totalInches = Math.abs(feetValue) * 12;
+          const rounded = Math.round(totalInches * 8) / 8;
+          let feet = Math.floor(rounded / 12);
+          let inches = rounded - feet * 12;
+          let whole = Math.floor(inches);
+          let frac = inches - whole;
+          if(whole >= 12){
+            feet += Math.floor(whole / 12);
+            whole = whole % 12;
+          }
+          const gcd = (a,b) => b ? gcd(b, a % b) : a;
+          let fracText = "";
+          if(frac > 0.001){
+            const denom = 8;
+            let num = Math.round(frac * denom);
+            if(num === denom){
+              whole += 1;
+              num = 0;
+            }
+            if(whole >= 12){
+              feet += 1;
+              whole = 0;
+            }
+            if(num > 0){
+              const g = gcd(num, denom);
+              fracText = ` ${num/g}/${denom/g}`;
+            }
+          }
+          return `${sign}${feet}' ${whole}${fracText}"`;
+        };
+
         const roomDimsText = (room) => {
           const ftPerPx = scaleFtPerMajor / pxPerMajor;
           const wFt = room.w * ftPerPx;
           const hFt = room.h * ftPerPx;
-          const fmt = (v) => (Math.round(v*10)/10).toFixed(1);
-          return `${fmt(wFt)} ft × ${fmt(hFt)} ft`;
+          return `${formatFeetInches(wFt)} × ${formatFeetInches(hFt)}`;
         };
 
-        const fmtFeet = (v) => (Math.round(v * 10) / 10).toFixed(1);
         const pxToFt = (px) => (scaleFtPerMajor / pxPerMajor) * px;
+        const ftToPx = (ft) => (pxPerMajor / scaleFtPerMajor) * ft;
+        const splitFeetInches = (feetValue) => {
+          const totalInches = Math.round(feetValue * 12 * 8) / 8;
+          const feet = Math.floor(totalInches / 12);
+          const inches = Math.max(0, totalInches - feet * 12);
+          return { feet, inches };
+        };
         const measurementText = (m) => {
           const dist = Math.hypot(m.x2 - m.x1, m.y2 - m.y1);
-          return `${fmtFeet(pxToFt(dist))} ft`;
+          return formatFeetInches(pxToFt(dist));
         };
+
+        const selectedRoomDimParts = useMemo(() => {
+          if(selected.type !== "room") return null;
+          if(!selectedEntity) return null;
+          return {
+            w: splitFeetInches(pxToFt(selectedEntity.w)),
+            h: splitFeetInches(pxToFt(selectedEntity.h))
+          };
+        }, [selected.type, selectedEntity, scaleFtPerMajor]);
 
         // Render
         const panelClass = [
@@ -1351,28 +1638,86 @@
               />
             )}
 
-            <div className="toolbar">
+            <div
+              className={`toolbar ${toolbarCollapsed ? "collapsed" : ""} ${drag?.mode === "toolbar-drag" ? "dragging" : ""}`}
+              style={{ left: toolbarPos.x, top: toolbarPos.y }}
+            >
+              <div
+                className={`toolbarHandle ${toolbarLocked ? "locked" : ""}`}
+                title={toolbarLocked ? "Toolbar locked" : "Drag toolbar"}
+                onPointerDown={(e) => {
+                  if(toolbarLocked) return;
+                  e.stopPropagation();
+                  setDrag({
+                    mode: "toolbar-drag",
+                    start: { x: e.clientX, y: e.clientY },
+                    origin: { x: toolbarPos.x, y: toolbarPos.y }
+                  });
+                  try { e.currentTarget.setPointerCapture(e.pointerId); } catch {}
+                }}
+              >
+                ⠿
+              </div>
               <button className={"toolBtn " + (tool==="select" ? "active" : "")} onClick={() => setTool("select")}>
-                Select
+                {toolbarCollapsed ? "Sel" : "Select"}
               </button>
               <button className={"toolBtn " + (tool==="pan" ? "active" : "")} onClick={() => setTool("pan")}>
-                Pan
+                {toolbarCollapsed ? "Pan" : "Pan"}
               </button>
               <span className="tbDivider"></span>
               <button className={"toolBtn room " + (tool==="draw" ? "active" : "")} onClick={() => setTool("draw")}>
-                Draw
+                {toolbarCollapsed ? "Draw" : "Draw"}
               </button>
               <button className={"toolBtn elev " + (tool==="elev" ? "active" : "")} onClick={() => setTool("elev")}>
-                Elevation
+                {toolbarCollapsed ? "Elev" : "Elevation"}
               </button>
-              <button className={"toolBtn note " + (tool==="note" ? "active" : "")} onClick={() => setTool("note")}>
-                Note
+              <button className={"toolBtn note " + (tool==="observation" ? "active" : "")} onClick={() => setTool("observation")}>
+                {toolbarCollapsed ? "Obs" : "Observation"}
+              </button>
+              <button className={"toolBtn item " + ((tool==="fixture" || tool==="opening") ? "active" : "")} onClick={() => setTool("fixture")}>
+                {toolbarCollapsed ? "Items" : "Items"}
+              </button>
+              <button className="toolBtn" onClick={() => setToolbarLocked(v => !v)} title={toolbarLocked ? "Unlock toolbar" : "Lock toolbar"}>
+                {toolbarLocked ? "🔒" : "🔓"}
+              </button>
+              <button className="toolBtn" onClick={() => setToolbarCollapsed(v => !v)} title="Collapse toolbar">
+                {toolbarCollapsed ? "➕" : "➖"}
               </button>
               {isMobile && (
                 <>
                   <span className="tbDivider"></span>
                   <button className="toolBtn" onClick={() => setMobilePanelOpen(true)}>Panel</button>
                 </>
+              )}
+              {tool === "draw" && (
+                <div className="toolbarMenu">
+                  <div className="menuRow">
+                    {[
+                      ["boundary","Boundary"],
+                      ["room","Room"],
+                      ["hallway","Hallway"],
+                      ["partial","Partial/Offset"]
+                    ].map(([value,label]) => (
+                      <button
+                        key={value}
+                        className={`menuBtn ${drawType === value ? "active" : ""}`}
+                        onClick={() => setDrawType(value)}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="tiny">Draw within boundary. Boundary is required before adding rooms or elevations.</div>
+                </div>
+              )}
+              {(tool === "fixture" || tool === "opening") && (
+                <div className="toolbarMenu">
+                  <div className="menuRow">
+                    <button className={`menuBtn ${tool === "fixture" ? "active" : ""}`} onClick={() => setTool("fixture")}>Fixture</button>
+                    <button className={`menuBtn ${tool === "opening" ? "active" : ""}`} onClick={() => setTool("opening")}>Opening</button>
+                  </div>
+                  <div className="tiny">Place fixtures or openings inside rooms without dimensions.</div>
+                </div>
               )}
             </div>
 
@@ -1478,6 +1823,29 @@
                             <span className="roomKind">{(r.kind || "room").toUpperCase()}</span>
                             {r.locked && <span className="roomKind">LOCKED</span>}
                           </div>
+                          {selected.type === "room" && selected.id === r.id && !r.locked && tool === "select" && (
+                            <>
+                              {["tl","tr","bl","br"].map(handle => (
+                                <div
+                                  key={handle}
+                                  className={`roomHandle ${handle}`}
+                                  onPointerDown={(e) => {
+                                    e.stopPropagation();
+                                    const world = screenToWorld(e.clientX, e.clientY);
+                                    const sheet = worldToSheetPx(world.x, world.y);
+                                    setDrag({
+                                      mode: "resize-room",
+                                      id: r.id,
+                                      handle,
+                                      startSheet: sheet,
+                                      startRoom: r
+                                    });
+                                    try { e.currentTarget.setPointerCapture(e.pointerId); } catch {}
+                                  }}
+                                />
+                              ))}
+                            </>
+                          )}
                         </div>
                       ))}
 
@@ -1529,7 +1897,7 @@
                         const cls = classifyElev(value);
                         const color = elevColor(value);
                         const delta = value - zeroRef;
-                        const deltaText = `${delta >= 0 ? "+" : ""}${delta.toFixed(2)}`;
+                        const deltaText = `${delta >= 0 ? "+" : "-"}${formatFeetInches(Math.abs(delta))}`;
                         return (
                           <div key={p.id} style={{ position:"absolute", left:p.x, top:p.y }}>
                             <div
@@ -1541,7 +1909,7 @@
                               }}
                               style={{ left:0, top:0 }}
                             >
-                              {value.toFixed(2)} <small>{cls.tag}</small>
+                              {formatFeetInches(Number.isFinite(value) ? value : 0)} <small>{cls.tag}</small>
                               <small>Δ {deltaText}</small>
                             </div>
                             <div
@@ -1557,7 +1925,7 @@
                         );
                       })}
 
-                      {/* Notes */}
+                      {/* Observations */}
                       {notes.map(n => (
                         <div
                           key={n.id}
@@ -1570,7 +1938,7 @@
                           }}
                           style={{ left:n.x, top:n.y }}
                         >
-                          N
+                          O
                         </div>
                       ))}
                     </div>
@@ -1584,7 +1952,6 @@
                         <button className="zBtn" onClick={zoomOut}>–</button>
                         <button className="zBtn" onClick={zoomIn}>+</button>
                         <button className="zBtn" onClick={zoomReset}>Reset</button>
-                        <button className="zBtn" onClick={zoomFit}>Fit</button>
                       </div>
                       <div className="zReadout">{Math.round(view.scale*100)}%</div>
                     </div>
@@ -1600,23 +1967,32 @@
                   <div className="titleWrap" style={{ minWidth:0 }}>
                     <div className="small">TitanFoundation</div>
                     <div className="big" title={projectName}>{projectName}</div>
+                    <div className="small" style={{ textTransform:"none", opacity:0.8 }}>{frontFaces}</div>
                   </div>
-                  <button className="collapseBtn" onClick={() => setPanelCollapsed(v => !v)} title="Collapse/Expand">
-                    {panelCollapsed ? "»" : "«"}
-                  </button>
+                  <div className="pHeaderActions">
+                    <button className="headerBtn" onClick={() => saveState("manual")} title="Save">💾</button>
+                    <button className="headerBtn" onClick={exportJson} title="Export">⬇️</button>
+                    <button className="headerBtn" onClick={zoomFit} title="Fit view">⤢</button>
+                    <button className="headerBtn" onClick={() => setPanelExpanded(v => !v)} title="Project settings">
+                      {panelExpanded ? "▴" : "▾"}
+                    </button>
+                    <button className="collapseBtn" onClick={() => setPanelCollapsed(v => !v)} title="Collapse/Expand">
+                      {panelCollapsed ? "»" : "«"}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="pScroll">
-                  <details className="section" open>
-                    <summary>Project &amp; scale</summary>
-                    <div className="sectionBody">
+                  {panelExpanded && (
+                    <div className="card" style={{ background:"#0B2A3A", color:"#fff", borderColor:"rgba(255,255,255,0.18)" }}>
+                      <div className="lbl" style={{ color:"rgba(255,255,255,0.75)" }}>Project &amp; scale</div>
                       <div>
-                        <label className="lbl">Project</label>
+                        <label className="lbl" style={{ color:"rgba(255,255,255,0.75)" }}>Project</label>
                         <input className="inp" value={projectName} onChange={(e)=>setProjectName(e.target.value)} placeholder="Enter Name" />
                       </div>
-                      <div className="row">
+                      <div className="row" style={{ marginTop:10 }}>
                         <div>
-                          <label className="lbl">Front faces</label>
+                          <label className="lbl" style={{ color:"rgba(255,255,255,0.75)" }}>Front faces</label>
                           <select value={frontFaces} onChange={(e)=>setFrontFaces(e.target.value)}>
                             {["North","South","East","West","Northeast","Northwest","Southeast","Southwest"].map(v => (
                               <option key={v} value={v}>{v}</option>
@@ -1624,7 +2000,7 @@
                           </select>
                         </div>
                         <div>
-                          <label className="lbl">Scale</label>
+                          <label className="lbl" style={{ color:"rgba(255,255,255,0.75)" }}>Scale</label>
                           <select value={scaleFtPerMajor} onChange={(e)=>setScaleFtPerMajor(Number(e.target.value))}>
                             {[2,5,10,15,20].map(v => (
                               <option key={v} value={v}>{v} ft / major grid</option>
@@ -1632,459 +2008,385 @@
                           </select>
                         </div>
                       </div>
-                      <div className="row">
+                      <div className="row" style={{ marginTop:10 }}>
                         <button className="btn btnPrimary" onClick={() => saveState("manual")}>Save</button>
                         <button className="btn" onClick={loadState}>Load</button>
                       </div>
-                      <div className="row">
-                        <button className="btn" onClick={exportJson}>Export JSON</button>
+                      <div className="row" style={{ marginTop:10 }}>
                         <label className="btn" style={{ margin:0 }}>
                           Import JSON
                           <input type="file" accept="application/json" style={{ display:"none" }}
                             onChange={(e)=>importJson(e.target.files?.[0])}
                           />
                         </label>
+                        <button className="btn" onClick={exportJson}>Export JSON</button>
                       </div>
                     </div>
-                  </details>
+                  )}
 
-                  <details className="section" open>
-                    <summary>Inspection modes</summary>
-                    <div className="sectionBody">
-                      <div className="row">
-                        <button className={"btn " + (tool==="select" ? "btnPrimary" : "")} onClick={() => setTool("select")}>Select</button>
-                        <button className={"btn " + (tool==="pan" ? "btnPrimary" : "")} onClick={() => setTool("pan")}>Pan</button>
+                  {selectedEntity ? (
+                    <div className="card">
+                      <div className="row" style={{ justifyContent:"space-between", marginBottom:8 }}>
+                        <div className="pill">Selected {selected.type}</div>
+                        <button className="btn" onClick={() => { setSelected({ type:null, id:null }); setTool("select"); }}>Back</button>
                       </div>
-                      <div className="row">
-                        <button className={"btn " + (tool==="draw" ? "btnPrimary" : "")} onClick={() => setTool("draw")}>Draw</button>
-                        <button className={"btn " + (tool==="elev" ? "btnPrimary" : "")} onClick={() => setTool("elev")}>Elevation</button>
+
+                      {selected.type === "room" && (
+                        <>
+                          <label className="lbl">Name</label>
+                          <input className="inp" value={selectedEntity.name} onChange={(e)=>updateSelected({ name:e.target.value })} />
+                          <label className="lbl" style={{ marginTop:8 }}>Kind</label>
+                          <select value={selectedEntity.kind || "room"} onChange={(e)=>updateSelected({ kind:e.target.value })}>
+                            {["room","boundary","hallway","partial"].map(v => (
+                              <option key={v} value={v}>{v}</option>
+                            ))}
+                          </select>
+                          {selectedRoomDimParts && (
+                            <>
+                              <label className="lbl" style={{ marginTop:8 }}>Dimensions</label>
+                              <div className="row">
+                                <div>
+                                  <label className="lbl">Width (ft/in)</label>
+                                  <div className="row">
+                                    <input
+                                      className="inp"
+                                      type="number"
+                                      value={selectedRoomDimParts.w.feet}
+                                      onChange={(e)=>{
+                                        const feet = Number(e.target.value) || 0;
+                                        const totalFt = Math.max(0.1, feet + (selectedRoomDimParts.w.inches / 12));
+                                        updateSelected({ w: ftToPx(totalFt) });
+                                      }}
+                                    />
+                                    <input
+                                      className="inp"
+                                      type="number"
+                                      step="0.125"
+                                      value={selectedRoomDimParts.w.inches}
+                                      onChange={(e)=>{
+                                        const inches = Number(e.target.value) || 0;
+                                        const totalFt = Math.max(0.1, selectedRoomDimParts.w.feet + (inches / 12));
+                                        updateSelected({ w: ftToPx(totalFt) });
+                                      }}
+                                    />
+                                  </div>
+                                </div>
+                                <div>
+                                  <label className="lbl">Height (ft/in)</label>
+                                  <div className="row">
+                                    <input
+                                      className="inp"
+                                      type="number"
+                                      value={selectedRoomDimParts.h.feet}
+                                      onChange={(e)=>{
+                                        const feet = Number(e.target.value) || 0;
+                                        const totalFt = Math.max(0.1, feet + (selectedRoomDimParts.h.inches / 12));
+                                        updateSelected({ h: ftToPx(totalFt) });
+                                      }}
+                                    />
+                                    <input
+                                      className="inp"
+                                      type="number"
+                                      step="0.125"
+                                      value={selectedRoomDimParts.h.inches}
+                                      onChange={(e)=>{
+                                        const inches = Number(e.target.value) || 0;
+                                        const totalFt = Math.max(0.1, selectedRoomDimParts.h.feet + (inches / 12));
+                                        updateSelected({ h: ftToPx(totalFt) });
+                                      }}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </>
+                          )}
+                          <label className="lbl" style={{ marginTop:8 }}>Caption</label>
+                          <input className="inp" value={selectedEntity.caption || ""} onChange={(e)=>updateSelected({ caption:e.target.value })} placeholder="Room caption" />
+                          <label className="lbl" style={{ marginTop:8 }}>Notes</label>
+                          <textarea value={selectedEntity.notes || ""} onChange={(e)=>updateSelected({ notes:e.target.value })} />
+                          <label className="lbl" style={{ marginTop:8 }}>Photo URL</label>
+                          <input className="inp" value={selectedEntity.photo || ""} onChange={(e)=>updateSelected({ photo:e.target.value })} placeholder="Paste image link" />
+                          <label style={{ display:"flex", gap:10, alignItems:"center", fontSize:13, fontWeight:1000, marginTop:8 }}>
+                            <input type="checkbox" checked={!!selectedEntity.locked} onChange={(e)=>updateSelected({ locked:e.target.checked })} />
+                            Lock movement
+                          </label>
+                        </>
+                      )}
+
+                      {selected.type === "elev" && (
+                        <>
+                          <label className="lbl">Elevation reading</label>
+                          <input
+                            className="inp"
+                            value={selectedEntity.reading}
+                            onChange={(e)=>{
+                              const v = Number(e.target.value);
+                              updateSelected({ reading: Number.isFinite(v) ? v : selectedEntity.reading });
+                            }}
+                          />
+                          <label className="lbl" style={{ marginTop:10 }}>Note</label>
+                          <textarea value={selectedEntity.note || ""} onChange={(e)=>updateSelected({ note:e.target.value })} />
+                          <label className="lbl" style={{ marginTop:10 }}>Caption</label>
+                          <input className="inp" value={selectedEntity.caption || ""} onChange={(e)=>updateSelected({ caption:e.target.value })} placeholder="Caption" />
+                          <label className="lbl" style={{ marginTop:10 }}>Photo URL</label>
+                          <input className="inp" value={selectedEntity.photo || ""} onChange={(e)=>updateSelected({ photo:e.target.value })} placeholder="Paste image link" />
+                          <label style={{ display:"flex", gap:10, alignItems:"center", fontSize:13, fontWeight:1000, marginTop:8 }}>
+                            <input type="checkbox" checked={!!selectedEntity.locked} onChange={(e)=>updateSelected({ locked:e.target.checked })} />
+                            Lock movement
+                          </label>
+                        </>
+                      )}
+
+                      {selected.type === "note" && (
+                        <>
+                          <label className="lbl">Observation type</label>
+                          <select value={selectedEntity.category || "Observation"} onChange={(e)=>updateSelected({ category:e.target.value })}>
+                            {observationOptions.map(opt => (
+                              <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                          </select>
+                          <label className="lbl" style={{ marginTop:8 }}>Notes</label>
+                          <textarea value={selectedEntity.text || ""} onChange={(e)=>updateSelected({ text:e.target.value })} />
+                          <label className="lbl" style={{ marginTop:8 }}>Caption</label>
+                          <input className="inp" value={selectedEntity.caption || ""} onChange={(e)=>updateSelected({ caption:e.target.value })} placeholder="Caption" />
+                          <label className="lbl" style={{ marginTop:8 }}>Photo URL</label>
+                          <input className="inp" value={selectedEntity.photo || ""} onChange={(e)=>updateSelected({ photo:e.target.value })} placeholder="Paste image link" />
+                        </>
+                      )}
+
+                      {selected.type === "fixture" && (
+                        <>
+                          <label className="lbl">Label</label>
+                          <input className="inp" value={selectedEntity.label} onChange={(e)=>updateSelected({ label:e.target.value })} />
+                          <label className="lbl" style={{ marginTop:8 }}>Kind</label>
+                          <input className="inp" value={selectedEntity.kind} onChange={(e)=>updateSelected({ kind:e.target.value })} />
+                          <label style={{ display:"flex", gap:10, alignItems:"center", fontSize:13, fontWeight:1000, marginTop:8 }}>
+                            <input type="checkbox" checked={!!selectedEntity.locked} onChange={(e)=>updateSelected({ locked:e.target.checked })} />
+                            Lock movement
+                          </label>
+                        </>
+                      )}
+
+                      {selected.type === "opening" && (
+                        <>
+                          <label className="lbl">Label</label>
+                          <input className="inp" value={selectedEntity.label} onChange={(e)=>updateSelected({ label:e.target.value })} />
+                          <label className="lbl" style={{ marginTop:8 }}>Kind</label>
+                          <input className="inp" value={selectedEntity.kind} onChange={(e)=>updateSelected({ kind:e.target.value })} />
+                          <label style={{ display:"flex", gap:10, alignItems:"center", fontSize:13, fontWeight:1000, marginTop:8 }}>
+                            <input type="checkbox" checked={!!selectedEntity.locked} onChange={(e)=>updateSelected({ locked:e.target.checked })} />
+                            Lock movement
+                          </label>
+                        </>
+                      )}
+
+                      {selected.type === "measure" && (
+                        <div className="tiny">Measurement length: {measurementText(selectedEntity)}</div>
+                      )}
+
+                      <div className="row" style={{ marginTop:10 }}>
+                        <button className="btn btnDanger" onClick={deleteSelected}>Delete</button>
+                        <button className="btn" onClick={()=>setSelected({ type:null, id:null })}>Clear</button>
                       </div>
-                      <div className="row">
-                        <button className={"btn " + (tool==="measure" ? "btnPrimary" : "")} onClick={() => setTool("measure")}>Measure</button>
-                        <button className={"btn " + (tool==="note" ? "btnPrimary" : "")} onClick={() => setTool("note")}>Note</button>
-                      </div>
-                      <div className="tiny">Active tool: <b>{tool}</b></div>
                     </div>
-                  </details>
+                  ) : (
+                    <>
+                      {tool === "draw" && (
+                        <div className="card">
+                          <label className="lbl">Draw mode</label>
+                          <div className="pill" style={{ marginBottom:8 }}>{drawType}</div>
+                          <div className="tiny">Rooms and elevations must stay inside the boundary. Use the toolbar menu to switch draw types.</div>
+                        </div>
+                      )}
 
-                  <details className="section" open>
-                    <summary>Draw settings</summary>
-                    <div className="sectionBody">
-                      <div>
-                        <label className="lbl">Draw type</label>
-                        <select value={drawType} onChange={(e)=>setDrawType(e.target.value)}>
-                          {[
-                            ["room","Room"],
-                            ["boundary","Boundary"],
-                            ["hallway","Hallway"],
-                            ["partial","Partial / offset"]
-                          ].map(([v,label]) => (
-                            <option key={v} value={v}>{label}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="tiny">
-                        Use Boundary for exterior property limits, Hallway for connectors, Partial for half walls or incomplete spans.
-                      </div>
-                    </div>
-                  </details>
-
-                  <details className="section" open>
-                    <summary>Elevation capture &amp; grading</summary>
-                    <div className="sectionBody">
-                      <div className="row">
-                        <div>
-                          <label className="lbl">Reading</label>
+                      {tool === "elev" && (
+                        <div className="card" style={{ borderColor:"rgba(22,163,74,0.3)" }}>
+                          <label className="lbl">Elevation reading</label>
                           <input
                             className="inp"
                             value={draftElevation.reading}
                             onChange={(e)=>setDraftElevation(prev => ({ ...prev, reading: e.target.value }))}
                           />
-                        </div>
-                        <div>
-                          <label className="lbl">Note</label>
+                          <label className="lbl" style={{ marginTop:10 }}>Note</label>
                           <input
                             className="inp"
                             value={draftElevation.note}
                             onChange={(e)=>setDraftElevation(prev => ({ ...prev, note: e.target.value }))}
                             placeholder="e.g. North wall"
                           />
-                        </div>
-                      </div>
-                      <div className="row">
-                        <button className={"btn " + (tool==="elev" ? "btnPrimary" : "")} onClick={() => setTool("elev")}>Use Elevation Tool</button>
-                        <button className="btn" onClick={() => setShowHeatmap(v => !v)}>{showHeatmap ? "Hide Heatmap" : "Show Heatmap"}</button>
-                      </div>
-                      {elevSummary.min == null ? (
-                        <div className="tiny">No elevation points yet. Place readings around the perimeter and interior.</div>
-                      ) : (
-                        <>
-                          <div className="row">
-                            <div className="pill">Min: {elevSummary.min.toFixed(2)}</div>
-                            <div className="pill">Max: {elevSummary.max.toFixed(2)}</div>
-                            <div className="pill">Diff: {elevSummary.diff.toFixed(2)}</div>
-                            <div className="pill">Zero: {zeroRef.toFixed(2)}</div>
+                          <div className="row" style={{ marginTop:10 }}>
+                            <button className={"btn " + (tool==="elev" ? "btnPrimary" : "")} onClick={() => setTool("elev")}>Use Elevation Tool</button>
+                            <button className="btn" onClick={() => setShowHeatmap(v => !v)}>{showHeatmap ? "Hide Heatmap" : "Show Heatmap"}</button>
                           </div>
-                          <div className="row">
-                            <label className="lbl" style={{ margin:0 }}>Zero reference</label>
-                            <select value={zeroMode} onChange={(e)=>setZeroMode(e.target.value)}>
-                              <option value="auto">Auto (midpoint)</option>
-                              <option value="custom">Custom</option>
-                            </select>
-                          </div>
-                          {zeroMode === "custom" && (
-                            <input
-                              className="inp"
-                              value={customZero}
-                              onChange={(e)=>setCustomZero(e.target.value)}
-                              placeholder="Enter zero reference"
-                            />
-                          )}
-                          <div className="tiny">
-                            Heatmap and HIGH/MID/LOW labels scale from lowest to highest readings so you can spot relative movement quickly.
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </details>
-
-                  <details className="section">
-                    <summary>Field notes</summary>
-                    <div className="sectionBody">
-                      <label className="lbl">Default note</label>
-                      <textarea value={draftNote} onChange={(e)=>setDraftNote(e.target.value)} placeholder="Observation or reference" />
-                      <button className={"btn " + (tool==="note" ? "btnPrimary" : "")} onClick={() => setTool("note")}>Use Note Tool</button>
-                      <div className="tiny">Attach photo links after placing a note (selected item).</div>
-                    </div>
-                  </details>
-
-                  <details className="section">
-                    <summary>Openings &amp; obstructions</summary>
-                    <div className="sectionBody">
-                      <div>
-                        <label className="lbl">Openings / half walls</label>
-                        <select
-                          value={draftOpening.kind}
-                          onChange={(e)=>setDraftOpening(prev => ({ ...prev, kind: e.target.value, label: e.target.value }))}
-                        >
-                          {["Door","Window","Half Wall","Garage Opening","Stair Opening"].map(v => (
-                            <option key={v} value={v}>{v}</option>
-                          ))}
-                        </select>
-                        <input
-                          className="inp"
-                          style={{ marginTop:8 }}
-                          value={draftOpening.label}
-                          onChange={(e)=>setDraftOpening(prev => ({ ...prev, label: e.target.value }))}
-                          placeholder="Label"
-                        />
-                        <div className="row" style={{ marginTop:8 }}>
-                          <input className="inp" value={draftOpening.w} onChange={(e)=>setDraftOpening(prev => ({ ...prev, w:e.target.value }))} placeholder="Width (px)" />
-                          <input className="inp" value={draftOpening.h} onChange={(e)=>setDraftOpening(prev => ({ ...prev, h:e.target.value }))} placeholder="Height (px)" />
-                        </div>
-                        <button className={"btn " + (tool==="opening" ? "btnPrimary" : "")} onClick={() => setTool("opening")}>Place Opening</button>
-                      </div>
-                      <div className="hr"></div>
-                      <div>
-                        <label className="lbl">Fixtures / obstructions</label>
-                        <select
-                          value={draftFixture.kind}
-                          onChange={(e)=>setDraftFixture(prev => ({ ...prev, kind: e.target.value, label: e.target.value }))}
-                        >
-                          {["Toilet","Sink","Tub","Shower","Washer","Dryer","Refrigerator","Table","Bed","Counter","Furnace","Water Heater","Column","Custom"].map(v => (
-                            <option key={v} value={v}>{v}</option>
-                          ))}
-                        </select>
-                        <input
-                          className="inp"
-                          style={{ marginTop:8 }}
-                          value={draftFixture.label}
-                          onChange={(e)=>setDraftFixture(prev => ({ ...prev, label: e.target.value }))}
-                          placeholder="Label"
-                        />
-                        <div className="row" style={{ marginTop:8 }}>
-                          <input className="inp" value={draftFixture.w} onChange={(e)=>setDraftFixture(prev => ({ ...prev, w:e.target.value }))} placeholder="Width (px)" />
-                          <input className="inp" value={draftFixture.h} onChange={(e)=>setDraftFixture(prev => ({ ...prev, h:e.target.value }))} placeholder="Height (px)" />
-                        </div>
-                        <button className={"btn " + (tool==="fixture" ? "btnPrimary" : "")} onClick={() => setTool("fixture")}>Place Fixture</button>
-                      </div>
-                    </div>
-                  </details>
-
-                  <details className="section">
-                    <summary>Measurements</summary>
-                    <div className="sectionBody">
-                      <div className="tiny">Click two points to measure. Measurements follow the scale grid.</div>
-                      <div className="row">
-                        <button className={"btn " + (tool==="measure" ? "btnPrimary" : "")} onClick={() => setTool("measure")}>Use Measure Tool</button>
-                        <button className="btn btnDanger" onClick={() => setMeasurements([])}>Clear</button>
-                      </div>
-                      {measureDraft && (
-                        <button className="btn" onClick={() => setMeasureDraft(null)}>Cancel pending measurement</button>
-                      )}
-                      <div className="tiny">Measurements: {measurements.length}</div>
-                    </div>
-                  </details>
-
-                  <details className="section">
-                    <summary>Items</summary>
-                    <div className="sectionBody">
-                      <div className="tiny">Select an item (or tap one on the sheet) to edit its details here.</div>
-
-                      <div className="tiny" style={{ fontWeight:1200, margin:"8px 0" }}>Spaces ({rooms.length})</div>
-                      {rooms.length ? rooms.map(r => (
-                        <div
-                          key={r.id}
-                          className={"listItem " + (selected.type==="room" && selected.id===r.id ? "selected":"")}
-                          onClick={()=>selectEntity("room", r.id)}
-                        >
-                          <div style={{ minWidth:0 }}>
-                            <b>{r.name}</b>
-                            <span>{roomDimsText(r)} • {(r.kind || "room")}</span>
-                          </div>
-                          <div className="pill">Space</div>
-                        </div>
-                      )) : <div className="tiny">No spaces yet. Use “Draw”.</div>}
-
-                      <div className="hr"></div>
-
-                      <div className="tiny" style={{ fontWeight:1200, margin:"8px 0" }}>Openings ({openings.length})</div>
-                      {openings.length ? openings.map(o => (
-                        <div
-                          key={o.id}
-                          className={"listItem " + (selected.type==="opening" && selected.id===o.id ? "selected":"")}
-                          onClick={()=>selectEntity("opening", o.id)}
-                        >
-                          <div style={{ minWidth:0 }}>
-                            <b>{o.label}</b>
-                            <span>{o.kind}</span>
-                          </div>
-                          <div className="pill">Opening</div>
-                        </div>
-                      )) : <div className="tiny">No openings placed.</div>}
-
-                      <div className="hr"></div>
-
-                      <div className="tiny" style={{ fontWeight:1200, margin:"8px 0" }}>Fixtures ({fixtures.length})</div>
-                      {fixtures.length ? fixtures.map(f => (
-                        <div
-                          key={f.id}
-                          className={"listItem " + (selected.type==="fixture" && selected.id===f.id ? "selected":"")}
-                          onClick={()=>selectEntity("fixture", f.id)}
-                        >
-                          <div style={{ minWidth:0 }}>
-                            <b>{f.label}</b>
-                            <span>{f.kind}</span>
-                          </div>
-                          <div className="pill">Fixture</div>
-                        </div>
-                      )) : <div className="tiny">No fixtures placed.</div>}
-
-                      <div className="hr"></div>
-
-                      <div className="tiny" style={{ fontWeight:1200, margin:"8px 0" }}>Elevations ({elevPts.length})</div>
-                      {elevPts.length ? elevPts.map(p => (
-                        <div
-                          key={p.id}
-                          className={"listItem " + (selected.type==="elev" && selected.id===p.id ? "selected":"")}
-                          onClick={()=>selectEntity("elev", p.id)}
-                        >
-                          <div style={{ minWidth:0 }}>
-                            <b>{Number(p.reading).toFixed(2)}</b>
-                            <span>{(p.note || "").trim() ? p.note : "No note"}</span>
-                          </div>
-                          <div className="pill">Elev</div>
-                        </div>
-                      )) : <div className="tiny">No elevations yet.</div>}
-
-                      <div className="hr"></div>
-
-                      <div className="tiny" style={{ fontWeight:1200, margin:"8px 0" }}>Notes ({notes.length})</div>
-                      {notes.length ? notes.map(n => (
-                        <div
-                          key={n.id}
-                          className={"listItem " + (selected.type==="note" && selected.id===n.id ? "selected":"")}
-                          onClick={()=>selectEntity("note", n.id)}
-                        >
-                          <div style={{ minWidth:0 }}>
-                            <b>Note</b>
-                            <span>{n.text}</span>
-                          </div>
-                          <div className="pill">Note</div>
-                        </div>
-                      )) : <div className="tiny">No notes yet.</div>}
-
-                      <div className="hr"></div>
-
-                      <div className="tiny" style={{ fontWeight:1200, margin:"8px 0" }}>Measurements ({measurements.length})</div>
-                      {measurements.length ? measurements.map(m => (
-                        <div
-                          key={m.id}
-                          className={"listItem " + (selected.type==="measure" && selected.id===m.id ? "selected":"")}
-                          onClick={()=>selectEntity("measure", m.id)}
-                        >
-                          <div style={{ minWidth:0 }}>
-                            <b>{measurementText(m)}</b>
-                            <span>Segment</span>
-                          </div>
-                          <div className="pill">Measure</div>
-                        </div>
-                      )) : <div className="tiny">No measurements yet.</div>}
-                    </div>
-                  </details>
-
-                  <details className="section">
-                    <summary>Selected item</summary>
-                    <div className="sectionBody">
-                      {!selectedEntity ? (
-                        <div className="tiny">Nothing selected.</div>
-                      ) : (
-                        <>
-                          {selected.type === "room" && (
+                          {elevSummary.min == null ? (
+                            <div className="tiny" style={{ marginTop:8 }}>No elevation points yet. Place readings around the perimeter and interior.</div>
+                          ) : (
                             <>
-                              <label className="lbl">Name</label>
-                              <input className="inp" value={selectedEntity.name} onChange={(e)=>updateSelected({ name:e.target.value })} />
-                              <label className="lbl" style={{ marginTop:8 }}>Kind</label>
-                              <select value={selectedEntity.kind || "room"} onChange={(e)=>updateSelected({ kind:e.target.value })}>
-                                {["room","boundary","hallway","partial"].map(v => (
+                              <div className="row" style={{ marginTop:10 }}>
+                                <div className="pill">Min: {formatFeetInches(elevSummary.min)}</div>
+                                <div className="pill">Max: {formatFeetInches(elevSummary.max)}</div>
+                                <div className="pill">Diff: {formatFeetInches(elevSummary.diff)}</div>
+                              </div>
+                              <div className="row" style={{ marginTop:8 }}>
+                                <label className="lbl" style={{ margin:0 }}>Zero reference</label>
+                                <select value={zeroMode} onChange={(e)=>setZeroMode(e.target.value)}>
+                                  <option value="auto">Auto (midpoint)</option>
+                                  <option value="custom">Custom</option>
+                                </select>
+                              </div>
+                              {zeroMode === "custom" && (
+                                <input
+                                  className="inp"
+                                  value={customZero}
+                                  onChange={(e)=>setCustomZero(e.target.value)}
+                                  placeholder="Enter zero reference"
+                                />
+                              )}
+                            </>
+                          )}
+                        </div>
+                      )}
+
+                      {tool === "observation" && (
+                        <div className="card" style={{ borderColor:"rgba(147,51,234,0.35)" }}>
+                          <label className="lbl">Observation type</label>
+                          <select
+                            value={draftObservation.category}
+                            onChange={(e)=>setDraftObservation(prev => ({ ...prev, category: e.target.value }))}
+                          >
+                            {observationOptions.map(opt => (
+                              <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                          </select>
+                          <label className="lbl" style={{ marginTop:10 }}>Notes</label>
+                          <textarea
+                            value={draftObservation.text}
+                            onChange={(e)=>setDraftObservation(prev => ({ ...prev, text: e.target.value }))}
+                            placeholder="Observation details"
+                          />
+                          <label className="lbl" style={{ marginTop:10 }}>Caption</label>
+                          <input
+                            className="inp"
+                            value={draftObservation.caption}
+                            onChange={(e)=>setDraftObservation(prev => ({ ...prev, caption: e.target.value }))}
+                            placeholder="Caption"
+                          />
+                          <label className="lbl" style={{ marginTop:10 }}>Photo URL</label>
+                          <input
+                            className="inp"
+                            value={draftObservation.photo}
+                            onChange={(e)=>setDraftObservation(prev => ({ ...prev, photo: e.target.value }))}
+                            placeholder="Paste image link"
+                          />
+                          <button className={"btn " + (tool==="observation" ? "btnPrimary" : "")} style={{ marginTop:10 }} onClick={() => setTool("observation")}>Use Observation Tool</button>
+                        </div>
+                      )}
+
+                      {(tool === "fixture" || tool === "opening") && (
+                        <div className="card" style={{ borderColor:"rgba(15,118,110,0.35)" }}>
+                          <label className="lbl">Items</label>
+                          {tool === "opening" ? (
+                            <>
+                              <select
+                                value={draftOpening.kind}
+                                onChange={(e)=>setDraftOpening(prev => ({ ...prev, kind: e.target.value, label: e.target.value }))}
+                              >
+                                {["Door","Window","Half Wall","Garage Opening","Stair Opening"].map(v => (
                                   <option key={v} value={v}>{v}</option>
                                 ))}
                               </select>
-                              <label style={{ display:"flex", gap:10, alignItems:"center", fontSize:13, fontWeight:1000, marginTop:8 }}>
-                                <input type="checkbox" checked={!!selectedEntity.locked} onChange={(e)=>updateSelected({ locked:e.target.checked })} />
-                                Lock position
-                              </label>
-                              <div className="tiny">Size follows the grid scale for quick takeoffs.</div>
-                            </>
-                          )}
-
-                          {selected.type === "elev" && (
-                            <>
-                              <label className="lbl">Elevation reading</label>
                               <input
                                 className="inp"
-                                value={selectedEntity.reading}
-                                onChange={(e)=>{
-                                  const v = Number(e.target.value);
-                                  updateSelected({ reading: Number.isFinite(v) ? v : selectedEntity.reading });
-                                }}
+                                style={{ marginTop:8 }}
+                                value={draftOpening.label}
+                                onChange={(e)=>setDraftOpening(prev => ({ ...prev, label: e.target.value }))}
+                                placeholder="Label"
                               />
-                              <label className="lbl" style={{ marginTop:10 }}>Note</label>
-                              <textarea value={selectedEntity.note || ""} onChange={(e)=>updateSelected({ note:e.target.value })} />
                             </>
-                          )}
-
-                          {selected.type === "note" && (
+                          ) : (
                             <>
-                              <label className="lbl">Note text</label>
-                              <textarea value={selectedEntity.text} onChange={(e)=>updateSelected({ text:e.target.value })} />
-                              <label className="lbl" style={{ marginTop:10 }}>Photo URL</label>
-                              <input className="inp" value={selectedEntity.photo || ""} onChange={(e)=>updateSelected({ photo:e.target.value })} placeholder="Paste image link" />
+                              <select
+                                value={draftFixture.kind}
+                                onChange={(e)=>setDraftFixture(prev => ({ ...prev, kind: e.target.value, label: e.target.value }))}
+                              >
+                                {["Toilet","Sink","Tub","Shower","Washer","Dryer","Refrigerator","Table","Bed","Counter","Furnace","Water Heater","Column","Custom"].map(v => (
+                                  <option key={v} value={v}>{v}</option>
+                                ))}
+                              </select>
+                              <input
+                                className="inp"
+                                style={{ marginTop:8 }}
+                                value={draftFixture.label}
+                                onChange={(e)=>setDraftFixture(prev => ({ ...prev, label: e.target.value }))}
+                                placeholder="Label"
+                              />
                             </>
                           )}
-
-                          {selected.type === "fixture" && (
-                            <>
-                              <label className="lbl">Label</label>
-                              <input className="inp" value={selectedEntity.label} onChange={(e)=>updateSelected({ label:e.target.value })} />
-                              <label className="lbl" style={{ marginTop:8 }}>Kind</label>
-                              <input className="inp" value={selectedEntity.kind} onChange={(e)=>updateSelected({ kind:e.target.value })} />
-                              <div className="row">
-                                <input className="inp" value={selectedEntity.w} onChange={(e)=>updateSelected({ w:e.target.value })} placeholder="Width" />
-                                <input className="inp" value={selectedEntity.h} onChange={(e)=>updateSelected({ h:e.target.value })} placeholder="Height" />
-                              </div>
-                              <label style={{ display:"flex", gap:10, alignItems:"center", fontSize:13, fontWeight:1000 }}>
-                                <input type="checkbox" checked={!!selectedEntity.locked} onChange={(e)=>updateSelected({ locked:e.target.checked })} />
-                                Lock position
-                              </label>
-                            </>
-                          )}
-
-                          {selected.type === "opening" && (
-                            <>
-                              <label className="lbl">Label</label>
-                              <input className="inp" value={selectedEntity.label} onChange={(e)=>updateSelected({ label:e.target.value })} />
-                              <label className="lbl" style={{ marginTop:8 }}>Kind</label>
-                              <input className="inp" value={selectedEntity.kind} onChange={(e)=>updateSelected({ kind:e.target.value })} />
-                              <div className="row">
-                                <input className="inp" value={selectedEntity.w} onChange={(e)=>updateSelected({ w:e.target.value })} placeholder="Width" />
-                                <input className="inp" value={selectedEntity.h} onChange={(e)=>updateSelected({ h:e.target.value })} placeholder="Height" />
-                              </div>
-                              <label style={{ display:"flex", gap:10, alignItems:"center", fontSize:13, fontWeight:1000 }}>
-                                <input type="checkbox" checked={!!selectedEntity.locked} onChange={(e)=>updateSelected({ locked:e.target.checked })} />
-                                Lock position
-                              </label>
-                            </>
-                          )}
-
-                          {selected.type === "measure" && (
-                            <div className="tiny">Measurement length: {measurementText(selectedEntity)}</div>
-                          )}
-
-                          <div className="row" style={{ marginTop:10 }}>
-                            <button className="btn btnDanger" onClick={deleteSelected}>Delete</button>
-                            <button className="btn" onClick={()=>setSelected({ type:null, id:null })}>Clear</button>
-                          </div>
-                        </>
+                          <div className="tiny" style={{ marginTop:8 }}>Tap the sheet to place the item. Dimensions are optional for fixtures.</div>
+                        </div>
                       )}
-                    </div>
-                  </details>
 
-                  <details className="section">
-                    <summary>Plumbing leak indicators</summary>
-                    <div className="sectionBody">
-                      <div className="tiny">Field prompts to support your site narrative.</div>
-                      <div style={{ marginTop:10, display:"grid", gap:8 }}>
-                        {[
-                          ["activeLeakReported","Active leak reported (occupant / visible)"],
-                          ["plumbingSupplyNearby","Plumbing supply line nearby"],
-                          ["drainLineNearby","Drain / sanitary line nearby"],
-                          ["stainingObserved","Staining / efflorescence observed"],
-                          ["elevatedMoistureReadings","Elevated moisture readings observed"]
-                        ].map(([k,label]) => (
-                          <label key={k} style={{ display:"flex", gap:10, alignItems:"center", fontSize:13, fontWeight:1000 }}>
-                            <input
-                              type="checkbox"
-                              checked={!!leak[k]}
-                              onChange={(e)=>setLeak(prev=>({ ...prev, [k]: e.target.checked }))}
-                            />
-                            {label}
-                          </label>
-                        ))}
-                      </div>
-                      <div style={{ marginTop:10 }}>
-                        <label className="lbl">Notes</label>
-                        <textarea
-                          value={leak.notes}
-                          onChange={(e)=>setLeak(prev=>({ ...prev, notes:e.target.value }))}
-                          placeholder="Brief notes (locations, fixtures, timing, actions taken, etc.)"
-                        />
-                      </div>
-                    </div>
-                  </details>
+                      <div className="card">
+                        <div className="tiny" style={{ fontWeight:1200, marginBottom:8 }}>Rooms ({rooms.length})</div>
+                        {rooms.length ? rooms.map(r => (
+                          <div
+                            key={r.id}
+                            className={"listItem " + (selected.type==="room" && selected.id===r.id ? "selected":"")}
+                            onClick={()=>selectEntity("room", r.id)}
+                          >
+                            <div style={{ minWidth:0 }}>
+                              <b>{r.name}</b>
+                              <span>{roomDimsText(r)} • {(r.kind || "room")}</span>
+                            </div>
+                            <div className="pill">Space</div>
+                          </div>
+                        )) : <div className="tiny">No rooms yet. Draw a boundary first.</div>}
 
-                  <details className="section">
-                    <summary>Quick reset</summary>
-                    <div className="sectionBody">
-                      <div className="row">
-                        <button className="btn btnDanger" onClick={()=>{
-                          if(!confirm("Clear the entire sheet?")) return;
-                          setRooms([]); setElevPts([]); setNotes([]); setFixtures([]); setOpenings([]); setMeasurements([]);
-                          setSelected({ type:null, id:null });
-                        }}>
-                          Clear Sheet
-                        </button>
-                        <button className="btn" onClick={() => zoomFit()}>Fit View</button>
-                      </div>
-                      <div className="tiny">
-                        Clearing the sheet does not clear the leak indicators or project header.
-                      </div>
-                    </div>
-                  </details>
+                        <div className="hr"></div>
 
+                        <div className="tiny" style={{ fontWeight:1200, margin:"8px 0" }}>Elevations ({elevPts.length})</div>
+                        {elevPts.length ? elevPts.map(p => (
+                          <div
+                            key={p.id}
+                            className={"listItem " + (selected.type==="elev" && selected.id===p.id ? "selected":"")}
+                            onClick={()=>selectEntity("elev", p.id)}
+                          >
+                            <div style={{ minWidth:0 }}>
+                              <b>{formatFeetInches(Number(p.reading) || 0)}</b>
+                              <span>{(p.note || "").trim() ? p.note : "No note"}</span>
+                            </div>
+                            <div className="pill">Elev</div>
+                          </div>
+                        )) : <div className="tiny">No elevations yet.</div>}
+
+                        <div className="hr"></div>
+
+                        <div className="tiny" style={{ fontWeight:1200, margin:"8px 0" }}>Observations ({notes.length})</div>
+                        {notes.length ? notes.map(n => (
+                          <div
+                            key={n.id}
+                            className={"listItem " + (selected.type==="note" && selected.id===n.id ? "selected":"")}
+                            onClick={()=>selectEntity("note", n.id)}
+                          >
+                            <div style={{ minWidth:0 }}>
+                              <b>{n.category || "Observation"}</b>
+                              <span>{n.text || "Observation"}</span>
+                            </div>
+                            <div className="pill">Obs</div>
+                          </div>
+                        )) : <div className="tiny">No observations yet.</div>}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
+
+            {panelCollapsed && (
+              <button className="sideToggle" onClick={() => setPanelCollapsed(false)} title="Show sidebar">
+                «
+              </button>
+            )}
 
             {isMobile && (
               <div className="mobileDock">
